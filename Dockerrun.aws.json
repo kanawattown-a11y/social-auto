@@ -1,0 +1,15 @@
+{
+    "AWSEBDockerrunVersion": "1",
+    "Image": {
+        "Name": "YOUR_DOCKER_IMAGE",
+        "Update": "true"
+    },
+    "Ports": [
+        {
+            "ContainerPort": 5000,
+            "HostPort": 5000
+        }
+    ],
+    "Volumes": [],
+    "Logging": "/var/log/nodejs"
+}

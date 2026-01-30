@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+
+# Environment variables
+.env
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# WhatsApp Web Session & Cache (Heavy!)
+.wwebjs_auth/
+.wwebjs_cache/
+
+# Uploads
+uploads/
+
+# Debug
+debug/
+error_*.png
+
+# OS
+.DS_Store
+Thumbs.db
