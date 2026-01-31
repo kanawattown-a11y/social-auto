@@ -59,6 +59,9 @@ connectDB();
 
 const app = express();
 
+// Trust proxy - Required for Render and other reverse proxies (MUST be before rate limiters!)
+app.set('trust proxy', 1);
+
 // Middleware
 app.use(cors()); // Enable CORS for all routes
 app.use(express.json()); // Body parser
