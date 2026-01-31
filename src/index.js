@@ -26,7 +26,7 @@ const aiRoutes = require('./routes/ai.routes');
 const templateRoutes = require('./routes/template.routes');
 const activityLogRoutes = require('./routes/activityLog.routes');
 
-// Services
+// Services-AMER
 const whatsappService = require('./services/whatsapp.service');
 const telegramService = require('./services/telegram.service');
 const cronService = require('./services/cron.service');
