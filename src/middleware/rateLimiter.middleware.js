@@ -9,10 +9,10 @@ const apiLimiter = rateLimit({
     legacyHeaders: false,
 });
 
-// Auth rate limiter - more lenient for development
+// Auth rate limiter - very lenient for development
 const authLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 20, // Increased from 5
+    max: 1000, // Very high limit
     message: 'Too many login attempts, please try again later.',
     standardHeaders: true,
     legacyHeaders: false,
