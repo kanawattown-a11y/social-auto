@@ -1,4 +1,12 @@
-const { IgApiClient } = require('instagram-private-api');
+// Optional dependency - only load if available
+let IgApiClient;
+try {
+    const igApi = require('instagram-private-api');
+    IgApiClient = igApi.IgApiClient;
+} catch (e) {
+    console.warn('instagram-private-api not installed - Instagram API disabled');
+}
+
 const InstagramAccount = require('../models/instagramAccount.model');
 const logger = require('../utils/logger');
 const crypto = require('crypto');

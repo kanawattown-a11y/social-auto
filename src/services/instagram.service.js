@@ -1,4 +1,11 @@
-const puppeteer = require('puppeteer');
+// Optional dependency - only load if available
+let puppeteer;
+try {
+  puppeteer = require('puppeteer');
+} catch (e) {
+  console.warn('Puppeteer not installed - Instagram automation disabled');
+}
+
 const InstagramAccount = require('../models/instagramAccount.model');
 const logger = require('../utils/logger');
 const path = require('path');

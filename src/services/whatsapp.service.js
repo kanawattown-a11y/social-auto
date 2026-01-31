@@ -1,4 +1,14 @@
-const { Client, LocalAuth, MessageMedia } = require('whatsapp-web.js');
+// Optional dependency - only load if available
+let Client, LocalAuth, MessageMedia;
+try {
+  const whatsappWeb = require('whatsapp-web.js');
+  Client = whatsappWeb.Client;
+  LocalAuth = whatsappWeb.LocalAuth;
+  MessageMedia = whatsappWeb.MessageMedia;
+} catch (e) {
+  console.warn('whatsapp-web.js not installed - WhatsApp automation disabled');
+}
+
 const WhatsappAccount = require('../models/whatsappAccount.model');
 const ChatbotRule = require('../models/chatbotRule.model');
 const logger = require('../utils/logger');

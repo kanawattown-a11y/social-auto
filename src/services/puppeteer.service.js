@@ -1,4 +1,11 @@
-const puppeteer = require('puppeteer');
+// Optional dependency - only load if available
+let puppeteer;
+try {
+  puppeteer = require('puppeteer');
+} catch (e) {
+  console.warn('Puppeteer not installed - Facebook automation disabled');
+}
+
 const FacebookAccount = require('../models/facebookAccount.model');
 const logger = require('../utils/logger');
 const Analytics = require('../models/analytics.model');

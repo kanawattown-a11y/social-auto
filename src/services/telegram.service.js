@@ -1,4 +1,11 @@
-const TelegramBot = require('node-telegram-bot-api');
+// Optional dependency - only load if available
+let TelegramBot;
+try {
+    TelegramBot = require('node-telegram-bot-api');
+} catch (e) {
+    console.warn('node-telegram-bot-api not installed - Telegram automation disabled');
+}
+
 const TelegramAccount = require('../models/telegramAccount.model');
 const logger = require('../utils/logger');
 
