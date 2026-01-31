@@ -1,20 +1,39 @@
-const nodemailer = require('nodemailer');
+// Temporarily disabled for deployment
+// const nodemailer = require('nodemailer');
 const logger = require('../utils/logger');
 
 class EmailService {
     constructor() {
-        this.transporter = nodemailer.createTransporter({
-            host: process.env.SMTP_HOST || 'smtp.gmail.com',
-            port: process.env.SMTP_PORT || 587,
-            secure: false,
-            auth: {
-                user: process.env.SMTP_USER,
-                pass: process.env.SMTP_PASS,
-            },
-        });
+        // Skip email setup if not configured
+        if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
+            logger.warn('Email service disabled - SMTP credentials not configured');
+            this.transporter = null;
+            return;
+        }
+
+        try {
+            const nodemailer = require('nodemailer');
+            this.transporter = nodemailer.createTransporter({
+                host: process.env.SMTP_HOST || 'smtp.gmail.com',
+                port: process.env.SMTP_PORT || 587,
+                secure: false,
+                auth: {
+                    user: process.env.SMTP_USER,
+                    pass: process.env.SMTP_PASS,
+                },
+            });
+        } catch (error) {
+            logger.error(`Email service initialization failed: ${error.message}`);
+            this.transporter = null;
+        }
     }
 
     async sendEmail({ to, subject, html }) {
+        if (!this.transporter) {
+            logger.warn('Email not sent - service not configured');
+            return { success: false, error: 'Email service not configured' };
+        }
+
         try {
             const info = await this.transporter.sendMail({
                 from: `"Social Auto" <${process.env.SMTP_USER}>`,
