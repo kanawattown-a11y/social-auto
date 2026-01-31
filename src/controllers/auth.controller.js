@@ -29,37 +29,39 @@ exports.registerUser = async (req, res) => {
       return res.status(400).json({ message: 'User already exists' });
     }
 
-    // Create user (password will be hashed automatically by pre-save hook)
-    const user = await User.create({
+    // Generate email verification token first
+    const verificationToken = crypto.randomBytes(32).toString('hex');
+    const verificationExpires = Date.now() + 24 * 60 * 60 * 1000; // 24 hours
+
+    // Create user instance (password will be hashed automatically by pre-save hook)
+    const user = new User({
       username,
       email,
       password, // Don't hash here - model will do it
+      emailVerificationToken: verificationToken,
+      emailVerificationExpires: verificationExpires,
     });
 
-    if (user) {
-      // Generate email verification token
-      const verificationToken = crypto.randomBytes(32).toString('hex');
-      user.emailVerificationToken = verificationToken;
-      user.emailVerificationExpires = Date.now() + 24 * 60 * 60 * 1000; // 24 hours
-      await user.save();
+    // Save user (triggers pre-save hook once)
+    await user.save();
 
-      // Send verification email
-      await emailService.sendVerificationEmail(email, verificationToken, username);
+    // Send verification email
+    await emailService.sendVerificationEmail(email, verificationToken, username);
 
-      res.status(201).json({
-        _id: user.id,
-        username: user.username,
-        email: user.email,
-        emailVerified: user.emailVerified,
-        token: generateToken(user._id),
-        message: 'تم إنشاء الحساب بنجاح. يرجى التحقق من بريدك الإلكتروني لتأكيد الحساب.',
-      });
-    } else {
-      res.status(400).json({ message: 'Invalid user data' });
-    }
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(201).json({
+      _id: user.id,
+      username: user.username,
+      email: user.email,
+      emailVerified: user.emailVerified,
+      token: generateToken(user._id),
+      message: 'تم إنشاء الحساب بنجاح. يرجى التحقق من بريدك الإلكتروني لتأكيد الحساب.',
+    });
+  } else {
+    res.status(400).json({ message: 'Invalid user data' });
   }
+} catch (error) {
+  res.status(500).json({ message: error.message });
+}
 };
 
 // @desc    Verify email
