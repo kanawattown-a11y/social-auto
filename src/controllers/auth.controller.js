@@ -56,12 +56,10 @@ exports.registerUser = async (req, res) => {
       token: generateToken(user._id),
       message: 'تم إنشاء الحساب بنجاح. يرجى التحقق من بريدك الإلكتروني لتأكيد الحساب.',
     });
-  } else {
-    res.status(400).json({ message: 'Invalid user data' });
+
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
-} catch (error) {
-  res.status(500).json({ message: error.message });
-}
 };
 
 // @desc    Verify email
