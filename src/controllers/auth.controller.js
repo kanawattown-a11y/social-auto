@@ -204,7 +204,7 @@ exports.resetPassword = async (req, res) => {
 // @access  Public
 exports.fixAdminPassword = async (req, res) => {
   try {
-    const email = 'admin@social-auto.ly'; // أو البريد الخاص بهم إذا كان مختلفاً
+    const email = req.query.email || 'admin@social-auto.ly'; // Allow fixing specific email
     const user = await User.findOne({
       $or: [{ email: email }, { isAdmin: true }]
     }).sort({ createdAt: -1 }); // Get latest admin
