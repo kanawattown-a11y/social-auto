@@ -198,3 +198,31 @@ exports.resetPassword = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+// @desc    Emergency Fix Admin Password
+// @route   GET /api/auth/fix-admin
+// @access  Public
+exports.fixAdminPassword = async (req, res) => {
+  try {
+    const email = 'admin@social-auto.ly'; // أو البريد الخاص بهم إذا كان مختلفاً
+    const user = await User.findOne({
+      $or: [{ email: email }, { isAdmin: true }]
+    }).sort({ createdAt: -1 }); // Get latest admin
+
+    if (!user) {
+      return res.status(404).json({ message: 'No admin user found to fix' });
+    }
+
+    // Force reset password
+    user.password = 'Admin@123'; // Model will hash this ONCE
+    await user.save();
+
+    res.status(200).json({
+      message: '✅ Success! Admin password reset to: Admin@123',
+      email: user.email,
+      username: user.username
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};

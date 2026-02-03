@@ -20,12 +20,8 @@ async function resetPassword() {
             process.exit(1);
         }
 
-        // تشفير كلمة المرور الجديدة
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(newPassword, salt);
-
-        // تحديث كلمة المرور
-        user.password = hashedPassword;
+        // تحديث كلمة المرور (الموديل سيقوم بالتشفير)
+        user.password = newPassword;
         user.emailVerified = true; // تأكيد البريد
         user.isAdmin = true; // admin
         user.role = 'admin'; // admin role

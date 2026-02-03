@@ -13,7 +13,7 @@ async function createAdmin() {
         const adminData = {
             username: 'admin',
             email: 'admin@social-auto.ly',
-            password: await bcrypt.hash('Admin@123', 10),
+            password: 'Admin@123', // Model will hash this
             isEmailVerified: true,
             isAdmin: true,
             subscription: {
