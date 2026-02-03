@@ -226,3 +226,41 @@ exports.fixAdminPassword = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+// @desc    Debug Auth (Check why login fails)
+// @route   GET /api/auth/debug
+// @access  Public
+exports.debugAuth = async (req, res) => {
+  try {
+    const { email, password } = req.query;
+
+    if (!email || !password) {
+      return res.status(400).json({ message: 'Please provide email and password query params' });
+    }
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.json({
+        status: 'User not found',
+        emailProvided: email
+      });
+    }
+
+    // Manual compare
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    res.json({
+      status: 'User found',
+      email: user.email,
+      storedHash: user.password,
+      inputPassword: password,
+      isMatch: isMatch,
+      hashLength: user.password ? user.password.length : 0,
+      recommendation: isMatch ? 'Login should work' : 'Hash mismatch - Password corrupted or double hashed'
+    });
+
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
